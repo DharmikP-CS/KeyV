@@ -6,13 +6,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/DharmikOO7/KeyV/store"
 	"github.com/gorilla/mux"
 )
 
-func helloMuxHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello gorilla/mux!\n"))
+func homepageHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(`KeyV("Kiwi") is a key value store written in Go`))
 }
 
 func putHandler(w http.ResponseWriter, r *http.Request) {
@@ -60,12 +61,18 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", helloMuxHandler)
+	r.HandleFunc("/", homepageHandler)
 	r.HandleFunc("/v1/{key}", getHandler).Methods("GET")
 	r.HandleFunc("/v1/{key}", putHandler).Methods("PUT")
 	r.HandleFunc("/v1/{key}", deleteHandler).Methods("DELETE")
 	fmt.Println("Starting server")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
