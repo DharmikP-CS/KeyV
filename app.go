@@ -112,5 +112,5 @@ func main() {
 	r.HandleFunc("/v1/{key}", putHandler).Methods("PUT")
 	r.HandleFunc("/v1/{key}", deleteHandler).Methods("DELETE")
 	fmt.Println("Starting server")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
